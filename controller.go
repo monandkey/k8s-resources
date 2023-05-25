@@ -26,7 +26,7 @@ func execPod(params params) error {
 	if err != nil {
 		return err
 	}
-	return formatPodList(podList)
+	return displayPodList(podList)
 }
 
 func execReplicaSet(params params) error {
@@ -34,7 +34,7 @@ func execReplicaSet(params params) error {
 	if err != nil {
 		return err
 	}
-	return formatReplicaSetList(rsList)
+	return displayReplicaSetList(rsList)
 }
 
 func execDeployment(params params) error {
@@ -42,7 +42,7 @@ func execDeployment(params params) error {
 	if err != nil {
 		return err
 	}
-	return formatDeploymentList(deployList)
+	return displayDeploymentList(deployList)
 }
 
 func execStatefulSet(params params) error {
@@ -50,7 +50,7 @@ func execStatefulSet(params params) error {
 	if err != nil {
 		return err
 	}
-	return formatStatefulSetList(stsList)
+	return displayStatefulSetList(stsList)
 }
 
 func execDaemonSet(params params) error {
@@ -58,7 +58,7 @@ func execDaemonSet(params params) error {
 	if err != nil {
 		return err
 	}
-	return formatDaemonSetList(dsList)
+	return displayDaemonSetList(dsList)
 }
 
 func execJob(params params) error {
@@ -66,7 +66,7 @@ func execJob(params params) error {
 	if err != nil {
 		return err
 	}
-	return formatJobList(jobList)
+	return displayJobList(jobList)
 }
 
 func execCronJob(params params) error {
@@ -74,5 +74,5 @@ func execCronJob(params params) error {
 	if err != nil {
 		return err
 	}
-	return formatCronJobList(cjList)
+	return displayCronJobList(cjList)
 }
