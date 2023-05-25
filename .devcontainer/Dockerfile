@@ -1,0 +1,3 @@
+FROM golang:1.19.0
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8

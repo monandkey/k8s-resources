@@ -1,0 +1,12 @@
+version: '3.7'
+services:
+  k8s-app:
+    image: k8s-app:1.0
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: k8s-app
+    hostname: k8s-app
+    volumes:
+      - ..:/workspace:cached
+    command: /bin/sh -c "while :; do sleep 10; done"

@@ -1,0 +1,32 @@
+{
+    "name": "k8s-app-dev",
+    "dockerComposeFile": "docker-compose.yaml",
+    "service": "k8s-app",
+    "workspaceFolder": "/workspace",
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "go.testFlags": ["-v"],
+                "go.toolsEnvVars": {"GO111MODULE": "on"},
+                "editor.guides.bracketPairs": true,
+                "editor.guides.bracketPairsHorizontal": true,
+                "editor.bracketPairColorization.enabled": true,
+                "[go]": {
+                    "editor.insertSpaces": false,
+                    "editor.formatOnSave": true,
+                    "editor.codeActionsOnSave": {
+                        "source.organizeImports": true
+                    },
+                    "editor.suggest.snippetsPreventQuickSuggestions": false
+                },
+                "go.toolsManagement.autoUpdate": true
+            },
+            "extensions": [
+                "golang.go",
+                "premparihar.gotestexplorer",
+                "oderwat.indent-rainbow",
+                "mhutchie.git-graph"
+            ]
+        }
+    }
+}
