@@ -16,7 +16,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: busybox-deployment
+  name: busybox-deploy
   labels:
     app: busybox
 spec:
@@ -93,7 +93,7 @@ spec:
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: busybox
+  name: busybox-cj
 spec:
   schedule: "* * * * *"
   jobTemplate:
