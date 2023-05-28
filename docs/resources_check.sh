@@ -23,11 +23,11 @@ k8sOffset=(
 
 # If a flag of 1 is entered, the output of that resource is skipped.
 k8sResourceSkipFlag=(
-  0, # deployment
-  0, # statefulset
-  0, # daemonset
-  0, # cronjob
-  1, # pod
+  0 # deployment
+  0 # statefulset
+  0 # daemonset
+  0 # cronjob
+  1 # pod
 )
 
 # Split up the command because it is too long to describe it normally in the command.
