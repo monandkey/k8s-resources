@@ -17,21 +17,21 @@ const (
 )
 
 func paddingSet(name string, length int, max int) int {
-	if max > len(name) {
+	if max >= len(name) {
 		return max - length
-	} else if max < len(name) {
+	} else if max <= len(name) {
 		return len(name) - length
 	}
 	return max + 1
 }
 
-func outputHeader(padding padding) {
-	podNamePadding := paddingSet(headerPodName, len(headerPodName), padding.podName)
-	containerNamePadding := paddingSet(headerContainerName, len(headerContainerName), padding.containerName)
-	requestCPUPadding := paddingSet(headerRequestCPU, len(headerRequestCPU), padding.requestCPU)
-	requestMemoryPadding := paddingSet(headerRequestMemory, len(headerRequestMemory), padding.requestMemory)
-	limitCPUPadding := paddingSet(headerLimitCPU, len(headerLimitCPU), padding.LimitCPU)
-	limitMemoryPadding := paddingSet(headerLimitMemory, len(headerLimitMemory), padding.LimitMemory)
+func outputHeader(maxLengths maxLength) {
+	podNamePadding := paddingSet(headerPodName, len(headerPodName), maxLengths.podName)
+	containerNamePadding := paddingSet(headerContainerName, len(headerContainerName), maxLengths.containerName)
+	requestCPUPadding := paddingSet(headerRequestCPU, len(headerRequestCPU), maxLengths.requestCPU)
+	requestMemoryPadding := paddingSet(headerRequestMemory, len(headerRequestMemory), maxLengths.requestMemory)
+	limitCPUPadding := paddingSet(headerLimitCPU, len(headerLimitCPU), maxLengths.limitCPU)
+	limitMemoryPadding := paddingSet(headerLimitMemory, len(headerLimitMemory), maxLengths.limitMemory)
 	fmt.Printf("| %s%s ", headerPodName, strings.Repeat(" ", podNamePadding))
 	fmt.Printf("| %s%s ", headerContainerName, strings.Repeat(" ", containerNamePadding))
 	fmt.Printf("| %s%s ", headerRequestCPU, strings.Repeat(" ", requestCPUPadding))
@@ -41,28 +41,28 @@ func outputHeader(padding padding) {
 	fmt.Printf("|\n")
 }
 
-func outputFrame(padding padding) {
-	fmt.Printf("+%s", strings.Repeat("-", padding.podName))
-	fmt.Printf("+%s", strings.Repeat("-", padding.containerName))
-	fmt.Printf("+%s", strings.Repeat("-", padding.requestCPU))
-	fmt.Printf("+%s", strings.Repeat("-", padding.requestMemory))
-	fmt.Printf("+%s", strings.Repeat("-", padding.LimitCPU))
-	fmt.Printf("+%s", strings.Repeat("-", padding.LimitMemory))
+func outputFrame(maxLengths maxLength) {
+	fmt.Printf("+--%s", strings.Repeat("-", maxLengths.podName))
+	fmt.Printf("+--%s", strings.Repeat("-", maxLengths.containerName))
+	fmt.Printf("+--%s", strings.Repeat("-", maxLengths.requestCPU))
+	fmt.Printf("+--%s", strings.Repeat("-", maxLengths.requestMemory))
+	fmt.Printf("+--%s", strings.Repeat("-", maxLengths.limitCPU))
+	fmt.Printf("+--%s", strings.Repeat("-", maxLengths.limitMemory))
 	fmt.Printf("+\n")
 }
 
-func outputBody(padding padding, container corev1.Container, podName string, resourceList map[string]containerResources) {
-	podNamePadding := paddingSet(headerPodName, len(podName), padding.podName)
-	requestCPUPadding := paddingSet(headerRequestCPU, resourceList[podName].requestCPU, padding.requestCPU)
-	requestMemoryPadding := paddingSet(headerRequestMemory, resourceList[podName].requestMemory, padding.requestMemory)
-	limitCPUPadding := paddingSet(headerLimitCPU, resourceList[podName].limitCPU, padding.LimitCPU)
-	limitMemoryPadding := paddingSet(headerLimitMemory, resourceList[podName].limitMemory, padding.LimitMemory)
-	containerNamePadding := paddingSet(headerContainerName, len(container.Name), padding.containerName)
+func outputBody(maxLengths maxLength, container corev1.Container, podName string, resourceList map[string]containerResources) {
+	podNamePadding := paddingSet(headerPodName, len(podName), maxLengths.podName)
+	requestCPUPadding := paddingSet(headerRequestCPU, len(container.Resources.Requests.Cpu().String()), maxLengths.requestCPU)
+	requestMemoryPadding := paddingSet(headerRequestMemory, len(container.Resources.Requests.Memory().String()), maxLengths.requestMemory)
+	limitCPUPadding := paddingSet(headerLimitCPU, len(container.Resources.Limits.Cpu().String()), maxLengths.limitCPU)
+	limitMemoryPadding := paddingSet(headerLimitMemory, len(container.Resources.Limits.Memory().String()), maxLengths.limitMemory)
+	containerNamePadding := paddingSet(headerContainerName, len(container.Name), maxLengths.containerName)
 	fmt.Printf("| %s%s ", podName, strings.Repeat(" ", podNamePadding))
 	fmt.Printf("| %s%s ", container.Name, strings.Repeat(" ", containerNamePadding))
-	fmt.Printf("| %d%s ", container.Resources.Requests.Cpu().Size(), strings.Repeat(" ", requestCPUPadding))
-	fmt.Printf("| %d%s ", container.Resources.Requests.Memory().Size(), strings.Repeat(" ", requestMemoryPadding))
-	fmt.Printf("| %d%s ", container.Resources.Limits.Cpu().Size(), strings.Repeat(" ", limitCPUPadding))
-	fmt.Printf("| %d%s ", container.Resources.Limits.Memory().Size(), strings.Repeat(" ", limitMemoryPadding))
+	fmt.Printf("| %s%s ", strings.Repeat(" ", requestCPUPadding), container.Resources.Requests.Cpu().String())
+	fmt.Printf("| %s%s ", strings.Repeat(" ", requestMemoryPadding), container.Resources.Requests.Memory().String())
+	fmt.Printf("| %s%s ", strings.Repeat(" ", limitCPUPadding), container.Resources.Limits.Cpu().String())
+	fmt.Printf("| %s%s ", strings.Repeat(" ", limitMemoryPadding), container.Resources.Limits.Memory().String())
 	fmt.Printf("|\n")
 }

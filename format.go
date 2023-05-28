@@ -7,17 +7,18 @@ import (
 )
 
 func displayPodList(podList *corev1.PodList) error {
-	padding := padding{
+	padding := maxLength{
 		podName:       0,
 		containerName: 0,
 		requestCPU:    0,
 		requestMemory: 0,
-		LimitCPU:      0,
-		LimitMemory:   0,
+		limitCPU:      0,
+		limitMemory:   0,
 	}
+	padding = retrieveHeaderPaddingLength(padding)
 	totalResourceList := make(map[string]containerResources)
 	for _, v := range podList.Items {
-		padding = retrievePadding(padding, v.Name, v.Spec.Containers, v.Spec.InitContainers)
+		padding = retrieveMaxLengths(padding, v.Name, v.Spec.Containers, v.Spec.InitContainers)
 		totalResourceList[v.Name] = retrieveContainerResources(v.Spec.Containers, v.Spec.InitContainers)
 	}
 	outputFrame(padding)
