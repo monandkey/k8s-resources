@@ -1,6 +1,6 @@
 package main
 
-func exec(params params) error {
+func exec(params parameter) error {
 	if params.resource == "pods" || params.resource == "pod" || params.resource == "po" {
 		return execPod(params)
 	} else if params.resource == "replicaset" || params.resource == "rs" {
@@ -21,7 +21,7 @@ func exec(params params) error {
 	return errResourceNotSupport
 }
 
-func execPod(params params) error {
+func execPod(params parameter) error {
 	podList, err := getPodList(params.kubeconfig, params.namespace)
 	if err != nil {
 		return err
@@ -29,7 +29,7 @@ func execPod(params params) error {
 	return displayPodList(podList)
 }
 
-func execReplicaSet(params params) error {
+func execReplicaSet(params parameter) error {
 	rsList, err := getReplicaSetList(params.kubeconfig, params.namespace)
 	if err != nil {
 		return err
@@ -37,7 +37,7 @@ func execReplicaSet(params params) error {
 	return displayReplicaSetList(rsList)
 }
 
-func execDeployment(params params) error {
+func execDeployment(params parameter) error {
 	deployList, err := getDeploymentList(params.kubeconfig, params.namespace)
 	if err != nil {
 		return err
@@ -45,7 +45,7 @@ func execDeployment(params params) error {
 	return displayDeploymentList(deployList)
 }
 
-func execStatefulSet(params params) error {
+func execStatefulSet(params parameter) error {
 	stsList, err := getStatefulSetList(params.kubeconfig, params.namespace)
 	if err != nil {
 		return err
@@ -53,7 +53,7 @@ func execStatefulSet(params params) error {
 	return displayStatefulSetList(stsList)
 }
 
-func execDaemonSet(params params) error {
+func execDaemonSet(params parameter) error {
 	dsList, err := getDaemonSetList(params.kubeconfig, params.namespace)
 	if err != nil {
 		return err
@@ -61,7 +61,7 @@ func execDaemonSet(params params) error {
 	return displayDaemonSetList(dsList)
 }
 
-func execJob(params params) error {
+func execJob(params parameter) error {
 	jobList, err := getJobList(params.kubeconfig, params.namespace)
 	if err != nil {
 		return err
@@ -69,7 +69,7 @@ func execJob(params params) error {
 	return displayJobList(jobList)
 }
 
-func execCronJob(params params) error {
+func execCronJob(params parameter) error {
 	cjList, err := getCronJobList(params.kubeconfig, params.namespace)
 	if err != nil {
 		return err
