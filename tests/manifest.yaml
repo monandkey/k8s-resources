@@ -5,13 +5,12 @@ metadata:
   name: busybox-pod
 spec:
   containers:
-    containers:
-    - name: busybox
-      image: busybox:latest
-      imagePullPolicy: IfNotPresent
-      args:
-        - sleep
-        - infinity
+  - name: busybox
+    image: busybox:latest
+    imagePullPolicy: IfNotPresent
+    args:
+      - sleep
+      - infinity
 ---
 apiVersion: apps/v1
 kind: Deployment
