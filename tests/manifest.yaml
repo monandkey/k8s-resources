@@ -1,0 +1,111 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox-pod
+spec:
+  containers:
+    containers:
+    - name: busybox
+      image: busybox:latest
+      imagePullPolicy: IfNotPresent
+      args:
+        - sleep
+        - infinity
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: busybox-deployment
+  labels:
+    app: busybox
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: busybox
+  template:
+    metadata:
+      labels:
+        app: busybox
+    spec:
+      containers:
+      - name: busybox
+        image: busybox:latest
+        imagePullPolicy: IfNotPresent
+        args:
+          - sleep
+          - infinity
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: busybox-sts
+spec:
+  serviceName: "busybox"
+  replicas: 2
+  selector:
+    matchLabels:
+      app: busybox
+  template:
+    metadata:
+      labels:
+        app: busybox
+    spec:
+      containers:
+      - name: busybox
+        image: busybox:latest
+        imagePullPolicy: IfNotPresent
+        args:
+        - sleep
+        - infinity
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: busybox-ds
+  labels:
+    app: busybox
+spec:
+  selector:
+    matchLabels:
+      app: busybox
+  template:
+    metadata:
+      labels:
+        app: busybox
+    spec:
+      containers:
+      - name: busybox
+        image: busybox:latest
+        imagePullPolicy: IfNotPresent
+        args:
+          - sleep
+          - infinity
+        resources:
+          limits:
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+      terminationGracePeriodSeconds: 30
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: busybox
+spec:
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: busybox
+            image: busybox:latest
+            imagePullPolicy: IfNotPresent
+            args:
+              - sleep
+              - infinity
+          restartPolicy: OnFailure
+---
