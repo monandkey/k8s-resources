@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	headerPodName       = "POD NAME"
+	headerPodName       = "METADATA NAME"
 	headerContainerName = "CONTAINER NAME"
 	headerRequestCPU    = "REQUEST CPU"
 	headerRequestMemory = "REQUEST MEMORY"
@@ -26,7 +26,7 @@ func paddingSet(name string, length int, max int) int {
 }
 
 func outputHeader(maxLengths maxLength) {
-	podNamePadding := paddingSet(headerPodName, len(headerPodName), maxLengths.podName)
+	podNamePadding := paddingSet(headerPodName, len(headerPodName), maxLengths.metadataName)
 	containerNamePadding := paddingSet(headerContainerName, len(headerContainerName), maxLengths.containerName)
 	requestCPUPadding := paddingSet(headerRequestCPU, len(headerRequestCPU), maxLengths.requestCPU)
 	requestMemoryPadding := paddingSet(headerRequestMemory, len(headerRequestMemory), maxLengths.requestMemory)
@@ -42,7 +42,7 @@ func outputHeader(maxLengths maxLength) {
 }
 
 func outputFrame(maxLengths maxLength) {
-	fmt.Printf("+--%s", strings.Repeat("-", maxLengths.podName))
+	fmt.Printf("+--%s", strings.Repeat("-", maxLengths.metadataName))
 	fmt.Printf("+--%s", strings.Repeat("-", maxLengths.containerName))
 	fmt.Printf("+--%s", strings.Repeat("-", maxLengths.requestCPU))
 	fmt.Printf("+--%s", strings.Repeat("-", maxLengths.requestMemory))
@@ -52,7 +52,7 @@ func outputFrame(maxLengths maxLength) {
 }
 
 func outputBody(maxLengths maxLength, container corev1.Container, podName string, resourceList map[string]containerResources) {
-	podNamePadding := paddingSet(headerPodName, len(podName), maxLengths.podName)
+	podNamePadding := paddingSet(headerPodName, len(podName), maxLengths.metadataName)
 	requestCPUPadding := paddingSet(headerRequestCPU, len(container.Resources.Requests.Cpu().String()), maxLengths.requestCPU)
 	requestMemoryPadding := paddingSet(headerRequestMemory, len(container.Resources.Requests.Memory().String()), maxLengths.requestMemory)
 	limitCPUPadding := paddingSet(headerLimitCPU, len(container.Resources.Limits.Cpu().String()), maxLengths.limitCPU)

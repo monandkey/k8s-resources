@@ -5,7 +5,7 @@ import (
 )
 
 type maxLength struct {
-	podName       int
+	metadataName  int
 	containerName int
 	requestCPU    int
 	requestMemory int
@@ -22,7 +22,7 @@ func compareLengths(left, right int) int {
 
 func retrieveHeaderPaddingLength(lp maxLength) maxLength {
 	return maxLength{
-		podName:       compareLengths(lp.podName, len(headerPodName)),
+		metadataName:  compareLengths(lp.metadataName, len(headerPodName)),
 		containerName: compareLengths(lp.containerName, len(headerContainerName)),
 		requestCPU:    compareLengths(lp.requestCPU, len(headerRequestCPU)),
 		requestMemory: compareLengths(lp.requestMemory, len(headerRequestMemory)),
@@ -33,7 +33,7 @@ func retrieveHeaderPaddingLength(lp maxLength) maxLength {
 
 func retrieveMaxLength(lp maxLength, podName string, container corev1.Container) maxLength {
 	return maxLength{
-		podName:       compareLengths(lp.podName, len(podName)),
+		metadataName:  compareLengths(lp.metadataName, len(podName)),
 		containerName: compareLengths(lp.containerName, len(container.Name)),
 		requestCPU:    compareLengths(lp.requestCPU, len(container.Resources.Requests.Cpu().String())),
 		requestMemory: compareLengths(lp.requestMemory, len(container.Resources.Requests.Memory().String())),
