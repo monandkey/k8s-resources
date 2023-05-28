@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"flag"
 	"fmt"
 	"path/filepath"
 
@@ -24,11 +23,10 @@ func getK8sConfig(kubeconfig *string) (*rest.Config, error) {
 	if *kubeconfig != "" {
 		// Do nothing.
 	} else if home := homedir.HomeDir(); home != "" {
-		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
+		*kubeconfig = filepath.Join(home, ".kube", "config")
 	} else {
-		kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
+		*kubeconfig = ""
 	}
-	flag.Parse()
 	return clientcmd.BuildConfigFromFlags("", *kubeconfig)
 }
 
