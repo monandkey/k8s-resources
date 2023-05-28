@@ -114,7 +114,9 @@ function retrievePerResource () {
   ns=$1
 
   for rnum in `seq 0 $((${#k8sResource[*]}-1))`; do
-    if [ ${k8sResourceSkipFlag[$rnum]} -eq 1 ]; then continue; fi
+    if [ ${k8sResourceSkipFlag[$rnum]} -eq 1 ]; then
+      continue
+    fi
 
     for metadataName in $($k8sCmd get ${k8sResource[$rnum]} -n $ns 2> /dev/null | grep -v NAME | awk '{print $1}'); do
       retrievePerContainerInfo $ns $rnum $metadataName
