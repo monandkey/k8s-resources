@@ -6,5 +6,5 @@ GO_FILES:=../
 .PHONY: build_cmd
 
 build_cmd:
-	GOOS=windows GOARCH=$(GOARCH) go build -o .$(BINDIR)/$(BINNAME).exe $(GO_FILES)
-	GOOS=linux GOARCH=$(GOARCH) go build -o .$(BINDIR)/$(BINNAME) $(GO_FILES)
+	GOOS=windows GOARCH=$(GOARCH) go build -o $(BINDIR)/$(BINNAME).exe $(GO_FILES)
+	GOOS=linux GOARCH=$(GOARCH) go build -o $(BINDIR)/$(BINNAME) $(GO_FILES)
