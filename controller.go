@@ -5,11 +5,11 @@ func exec(params parameter) error {
 		return execPod(params)
 	} else if params.resource == "replicaset" || params.resource == "rs" {
 		return execReplicaSet(params)
-	} else if params.resource == "deployments" || params.resource == "deploy" {
+	} else if params.resource == "deployments" || params.resource == "deployment" || params.resource == "deploy" {
 		return execDeployment(params)
-	} else if params.resource == "statefulsets" || params.resource == "sts" {
+	} else if params.resource == "statefulsets" || params.resource == "statefulset" || params.resource == "sts" {
 		return execStatefulSet(params)
-	} else if params.resource == "daemonsets" || params.resource == "ds" {
+	} else if params.resource == "daemonsets" || params.resource == "daemonset" || params.resource == "ds" {
 		return execDaemonSet(params)
 	} else if params.resource == "jobs" || params.resource == "job" {
 		return execJob(params)
