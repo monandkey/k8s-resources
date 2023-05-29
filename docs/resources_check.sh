@@ -1,24 +1,24 @@
 #!/usr/bin/bash
 
 # Specifies the command to be executed. It is assumed that kubectl or oc is entered here.
-k8sCmd=oc
+k8sCmd=kubectl
 
 # Define the resources you want to check as an array.
 k8sResource=(
-  "deployment",
-  "statefulset",
-  "daemonset",
-  "cronjob",
+  "deployment"
+  "statefulset"
+  "daemonset"
+  "cronjob"
   "pod"
 )
 
 # Define offsets to containers and InitContainers.
 k8sOffset=(
-  "spec.template.spec",                  # deployment
-  "spec.template.spec",                  # statefulset
-  "spec.template.spec",                  # daemonset
-  "spec.jobTemplate.spec.template.spec", # cronjob
-  "spec"                                 # pod
+  "spec.template.spec"                  # deployment
+  "spec.template.spec"                  # statefulset
+  "spec.template.spec"                  # daemonset
+  "spec.jobTemplate.spec.template.spec" # cronjob
+  "spec"                                # pod
 )
 
 # If a flag of 1 is entered, the output of that resource is skipped.
@@ -69,13 +69,13 @@ function resultOutput () {
   ns=$1
   resources=$2
   metadataName=$3
-  container=$4
-  reqCPUList=$5
-  reqMemList=$6
-  limCPUList=$7
-  limMemList=$8
+  conList=($4)
+  reqCPUList=($5)
+  reqMemList=($6)
+  limCPUList=($7)
+  limMemList=($8)
 
-  for cnum in `seq 0 $((${#container[*]}-1))`; do
+  for cnum in `seq 0 $((${#conList[*]}-1))`; do
     echo $ns,$resources,$metadataName,${conList[$cnum]},${reqCPUList[$cnum]},${reqMemList[$cnum]},${limCPUList[$cnum]},${limMemList[$cnum]} | tee -a $RESULT_FILE
   done
 }
@@ -88,23 +88,23 @@ function retrievePerContainerInfo () {
   metadataName=$3
 
   # Retrieve the container name of the container and initContainer.
-  conList=$($k8sCmd get ${k8sResource[$rnum]} -n $ns $metadataName -o jsonpath="{.${k8sOffset[$rnum]}.containers[*].name}")
-  initConList=$($k8sCmd get ${k8sResource[$rnum]} -n $ns $metadataName -o jsonpath="{.${k8sOffset[$rnum]}.initContainers[*].name}")
+  conList=(`$k8sCmd get ${k8sResource[$rnum]} -n $ns $metadataName -o jsonpath="{.${k8sOffset[$rnum]}.containers[*].name}"`)
+  initConList=(`$k8sCmd get ${k8sResource[$rnum]} -n $ns $metadataName -o jsonpath="{.${k8sOffset[$rnum]}.initContainers[*].name}"`)
 
-  if [ $((${#conList[0]}-1)) -ne 0 ]; then
-    conReqCPUList=$($k8sCmd get ${k8sResource[$rnum]} -n $ns $metadataName -o jsonpath="{.${k8sOffset[$rnum]}.contaienrs[*].$k8sReqCPU}")
-    conReqMemList=$($k8sCmd get ${k8sResource[$rnum]} -n $ns $metadataName -o jsonpath="{.${k8sOffset[$rnum]}.contaienrs[*].$k8sReqMem}")
-    conLimCPUList=$($k8sCmd get ${k8sResource[$rnum]} -n $ns $metadataName -o jsonpath="{.${k8sOffset[$rnum]}.contaienrs[*].$k8sLimCPU}")
-    conLimMemList=$($k8sCmd get ${k8sResource[$rnum]} -n $ns $metadataName -o jsonpath="{.${k8sOffset[$rnum]}.contaienrs[*].$k8sLimMem}")
-    resultOutput $ns ${k8sResource[$rnum]} $metadataName $conList $conReqCPUList $conReqMemList $conLimCPUList $conLimMemList
+  if [ $((${#conList[*]})) -ne 0 ]; then
+    conReqCPUList=(`$k8sCmd get ${k8sResource[$rnum]} -n $ns $metadataName -o jsonpath="{.${k8sOffset[$rnum]}.containers[*].$k8sReqCPU}"`)
+    conReqMemList=(`$k8sCmd get ${k8sResource[$rnum]} -n $ns $metadataName -o jsonpath="{.${k8sOffset[$rnum]}.containers[*].$k8sReqMem}"`)
+    conLimCPUList=(`$k8sCmd get ${k8sResource[$rnum]} -n $ns $metadataName -o jsonpath="{.${k8sOffset[$rnum]}.containers[*].$k8sLimCPU}"`)
+    conLimMemList=(`$k8sCmd get ${k8sResource[$rnum]} -n $ns $metadataName -o jsonpath="{.${k8sOffset[$rnum]}.containers[*].$k8sLimMem}"`)
+    resultOutput $ns ${k8sResource[$rnum]} $metadataName "${conList[*]}" "${conReqCPUList[*]}" "${conReqMemList[*]}" "${conLimCPUList[*]}" "${conLimMemList[*]}"
   fi
 
-  if [ $((${#initConList[0]}-1)) -ne 0 ]; then
-    iconReqCPUList=$($k8sCmd get ${k8sResource[$rnum]} -n $ns $metadataName -o jsonpath="{.${k8sOffset[$rnum]}.initContainers[*].$k8sReqCPU}")
-    iconReqMemList=$($k8sCmd get ${k8sResource[$rnum]} -n $ns $metadataName -o jsonpath="{.${k8sOffset[$rnum]}.initContainers[*].$k8sReqMem}")
-    iconLimCPUList=$($k8sCmd get ${k8sResource[$rnum]} -n $ns $metadataName -o jsonpath="{.${k8sOffset[$rnum]}.initContainers[*].$k8sLimCPU}")
-    iconLimMemList=$($k8sCmd get ${k8sResource[$rnum]} -n $ns $metadataName -o jsonpath="{.${k8sOffset[$rnum]}.initContainers[*].$k8sLimMem}")
-    resultOutput $ns ${k8sResource[$rnum]} $metadataName $iconList $iconReqCPUList $iconReqMemList $iconLimCPUList $iconLimMemList
+  if [ $((${#initConList[*]})) -ne 0 ]; then
+    iconReqCPUList=(`$k8sCmd get ${k8sResource[$rnum]} -n $ns $metadataName -o jsonpath="{.${k8sOffset[$rnum]}.initContainers[*].$k8sReqCPU}"`)
+    iconReqMemList=(`$k8sCmd get ${k8sResource[$rnum]} -n $ns $metadataName -o jsonpath="{.${k8sOffset[$rnum]}.initContainers[*].$k8sReqMem}"`)
+    iconLimCPUList=(`$k8sCmd get ${k8sResource[$rnum]} -n $ns $metadataName -o jsonpath="{.${k8sOffset[$rnum]}.initContainers[*].$k8sLimCPU}"`)
+    iconLimMemList=(`$k8sCmd get ${k8sResource[$rnum]} -n $ns $metadataName -o jsonpath="{.${k8sOffset[$rnum]}.initContainers[*].$k8sLimMem}"`)
+    resultOutput $ns ${k8sResource[$rnum]} $metadataName "${iconList[*]}" "${iconReqCPUList[*]}" "${iconReqMemList[*]}" "${iconLimCPUList[*]}" "${iconLimMemList[*]}"
   fi
 }
 
