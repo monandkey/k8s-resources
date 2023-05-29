@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	headerPodName       = "POD NAME"
+	headerPodName       = "METADATA NAME"
 	headerContainerName = "CONTAINER NAME"
 	headerRequestCPU    = "REQUEST CPU"
 	headerRequestMemory = "REQUEST MEMORY"
@@ -26,43 +26,49 @@ func paddingSet(name string, length int, max int) int {
 }
 
 func outputHeader(maxLengths maxLength) {
-	podNamePadding := paddingSet(headerPodName, len(headerPodName), maxLengths.podName)
+	podNamePadding := paddingSet(headerPodName, len(headerPodName), maxLengths.metadataName)
 	containerNamePadding := paddingSet(headerContainerName, len(headerContainerName), maxLengths.containerName)
 	requestCPUPadding := paddingSet(headerRequestCPU, len(headerRequestCPU), maxLengths.requestCPU)
 	requestMemoryPadding := paddingSet(headerRequestMemory, len(headerRequestMemory), maxLengths.requestMemory)
 	limitCPUPadding := paddingSet(headerLimitCPU, len(headerLimitCPU), maxLengths.limitCPU)
 	limitMemoryPadding := paddingSet(headerLimitMemory, len(headerLimitMemory), maxLengths.limitMemory)
-	fmt.Printf("| %s%s ", headerPodName, strings.Repeat(" ", podNamePadding))
-	fmt.Printf("| %s%s ", headerContainerName, strings.Repeat(" ", containerNamePadding))
-	fmt.Printf("| %s%s ", headerRequestCPU, strings.Repeat(" ", requestCPUPadding))
-	fmt.Printf("| %s%s ", headerRequestMemory, strings.Repeat(" ", requestMemoryPadding))
-	fmt.Printf("| %s%s ", headerLimitCPU, strings.Repeat(" ", limitCPUPadding))
-	fmt.Printf("| %s%s ", headerLimitMemory, strings.Repeat(" ", limitMemoryPadding))
-	fmt.Printf("|\n")
+	fmt.Printf(
+		"| %s%s | %s%s | %s%s | %s%s | %s%s | %s%s |\n",
+		headerPodName, strings.Repeat(" ", podNamePadding),
+		headerContainerName, strings.Repeat(" ", containerNamePadding),
+		headerRequestCPU, strings.Repeat(" ", requestCPUPadding),
+		headerRequestMemory, strings.Repeat(" ", requestMemoryPadding),
+		headerLimitCPU, strings.Repeat(" ", limitCPUPadding),
+		headerLimitMemory, strings.Repeat(" ", limitMemoryPadding),
+	)
 }
 
 func outputFrame(maxLengths maxLength) {
-	fmt.Printf("+--%s", strings.Repeat("-", maxLengths.podName))
-	fmt.Printf("+--%s", strings.Repeat("-", maxLengths.containerName))
-	fmt.Printf("+--%s", strings.Repeat("-", maxLengths.requestCPU))
-	fmt.Printf("+--%s", strings.Repeat("-", maxLengths.requestMemory))
-	fmt.Printf("+--%s", strings.Repeat("-", maxLengths.limitCPU))
-	fmt.Printf("+--%s", strings.Repeat("-", maxLengths.limitMemory))
-	fmt.Printf("+\n")
+	fmt.Printf(
+		"+--%s+--%s+--%s+--%s+--%s+--%s+\n",
+		strings.Repeat("-", maxLengths.metadataName),
+		strings.Repeat("-", maxLengths.containerName),
+		strings.Repeat("-", maxLengths.requestCPU),
+		strings.Repeat("-", maxLengths.requestMemory),
+		strings.Repeat("-", maxLengths.limitCPU),
+		strings.Repeat("-", maxLengths.limitMemory),
+	)
 }
 
 func outputBody(maxLengths maxLength, container corev1.Container, podName string, resourceList map[string]containerResources) {
-	podNamePadding := paddingSet(headerPodName, len(podName), maxLengths.podName)
+	podNamePadding := paddingSet(headerPodName, len(podName), maxLengths.metadataName)
 	requestCPUPadding := paddingSet(headerRequestCPU, len(container.Resources.Requests.Cpu().String()), maxLengths.requestCPU)
 	requestMemoryPadding := paddingSet(headerRequestMemory, len(container.Resources.Requests.Memory().String()), maxLengths.requestMemory)
 	limitCPUPadding := paddingSet(headerLimitCPU, len(container.Resources.Limits.Cpu().String()), maxLengths.limitCPU)
 	limitMemoryPadding := paddingSet(headerLimitMemory, len(container.Resources.Limits.Memory().String()), maxLengths.limitMemory)
 	containerNamePadding := paddingSet(headerContainerName, len(container.Name), maxLengths.containerName)
-	fmt.Printf("| %s%s ", podName, strings.Repeat(" ", podNamePadding))
-	fmt.Printf("| %s%s ", container.Name, strings.Repeat(" ", containerNamePadding))
-	fmt.Printf("| %s%s ", strings.Repeat(" ", requestCPUPadding), container.Resources.Requests.Cpu().String())
-	fmt.Printf("| %s%s ", strings.Repeat(" ", requestMemoryPadding), container.Resources.Requests.Memory().String())
-	fmt.Printf("| %s%s ", strings.Repeat(" ", limitCPUPadding), container.Resources.Limits.Cpu().String())
-	fmt.Printf("| %s%s ", strings.Repeat(" ", limitMemoryPadding), container.Resources.Limits.Memory().String())
-	fmt.Printf("|\n")
+	fmt.Printf(
+		"| %s%s | %s%s | %s%s | %s%s | %s%s | %s%s |\n",
+		podName, strings.Repeat(" ", podNamePadding),
+		container.Name, strings.Repeat(" ", containerNamePadding),
+		strings.Repeat(" ", requestCPUPadding), container.Resources.Requests.Cpu().String(),
+		strings.Repeat(" ", requestMemoryPadding), container.Resources.Requests.Memory().String(),
+		strings.Repeat(" ", limitCPUPadding), container.Resources.Limits.Cpu().String(),
+		strings.Repeat(" ", limitMemoryPadding), container.Resources.Limits.Memory().String(),
+	)
 }
